@@ -44,5 +44,5 @@ public sealed class TheBeyondAct : CustomActModel
     protected override string CustomMapTopBgPath => "res://images/packed/map/map_bgs/the_beyond_act/map_top_the_beyond_act.png";
     protected override string CustomMapMidBgPath => "res://images/packed/map/map_bgs/the_beyond_act/map_middle_the_beyond_act.png";
     protected override string CustomMapBotBgPath => "res://images/packed/map/map_bgs/the_beyond_act/map_middle_the_beyond_act.png";
-    protected override string CustomRestSiteBackgroundPath => "res://scenes/rest_site/the_beyond_act_rest_site.tscn";
+    protected override string CustomRestSiteBackgroundPath => "res://scenes/rest_site/glory_rest_site.tscn";
 }

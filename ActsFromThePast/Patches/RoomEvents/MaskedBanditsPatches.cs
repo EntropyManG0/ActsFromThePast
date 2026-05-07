@@ -42,23 +42,25 @@ public class MaskedBanditsPatches
     {
         public static void Postfix(NMapScreen __instance)
         {
-            if (!MaskedBandits.WaitingForMapEasterEgg)
-                return;
-
-            MaskedBandits.WaitingForMapEasterEgg = false;
-
-            if (NEventRoom.Instance?.Layout is not { } layout)
+            string descKey = null;
+            if (MaskedBandits.WaitingForMapEasterEgg)
             {
-                return;
+                MaskedBandits.WaitingForMapEasterEgg = false;
+                descKey = "ACTSFROMTHEPAST-MASKED_BANDITS.pages.PAID_4.description";
             }
-
+            else if (MaskedBandits.WaitingForBrandishEasterEgg)
+            {
+                MaskedBandits.WaitingForBrandishEasterEgg = false;
+                descKey = "ACTSFROMTHEPAST-MASKED_BANDITS.pages.BRANDISH_4.description";
+            }
+            if (descKey == null)
+                return;
+            if (NEventRoom.Instance?.Layout is not { } layout)
+                return;
             var descLabel = layout.GetNodeOrNull<MegaRichTextLabel>("EventDescription");
             if (descLabel == null)
-            {
                 return;
-            }
-
-            var locString = new LocString("events", "ACTSFROMTHEPAST-MASKED_BANDITS.pages.PAID_4.description");
+            var locString = new LocString("events", descKey);
             descLabel.Text = locString.GetFormattedText();
         }
     }

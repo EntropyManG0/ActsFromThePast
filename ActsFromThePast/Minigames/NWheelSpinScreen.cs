@@ -462,9 +462,9 @@ public partial class NWheelSpinScreen : Control, IOverlayScreen, IScreenContext
         _controllerButton?.Disable();
         if (_controllerIcon != null) _controllerIcon.Visible = false;
         SlideButtonOut();
- 
+        
         ModAudio.Play("events", "wheel");
- 
+        
         float resultAngle = _minigame.ResultAngle;
         float spinEnd = SpinVelocity * SpinDuration; // ~3000°
  

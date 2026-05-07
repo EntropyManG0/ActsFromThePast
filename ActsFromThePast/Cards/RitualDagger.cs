@@ -92,7 +92,7 @@ public sealed class RitualDagger : CustomCardModel
             .Targeting(cardPlay.Target)
             .WithHitFx("vfx/vfx_attack_slash")
             .Execute(choiceContext);
-        if (!shouldTriggerFatal || !attackCommand.Results.Any(r => r.WasTargetKilled))
+        if (!shouldTriggerFatal || !attackCommand.Results.SelectMany(r => r).Any(r => r.WasTargetKilled))
             return;
         var increase = DynamicVars[_increaseKey].IntValue;
         BuffFromPlay(increase);

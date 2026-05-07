@@ -28,8 +28,7 @@ public sealed class CultistHeadpiece : CustomRelicModel
     {
         if (player != Owner || Owner.Creature.CombatState.RoundNumber != 1)
             return;
-
-        Flash();
+        
         TalkCmd.Play(CultistBanter, Owner.Creature, Owner.Character.SpeechBubbleColor);
         var sfx = CultistSfx[Rng.Chaotic.NextInt(CultistSfx.Length)];
         SfxCmd.Play(sfx);

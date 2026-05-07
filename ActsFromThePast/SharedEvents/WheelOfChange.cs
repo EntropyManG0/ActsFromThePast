@@ -108,9 +108,10 @@ public sealed class WheelOfChange : CustomEventModel
                     DynamicVars["HpLoss"].BaseValue,
                     ValueProp.Unblockable | ValueProp.Unpowered,
                     null, null);
-                break;
+                SfxCmd.Play("event:/sfx/enemy/enemy_attacks/gremlin_merc/sneaky_gremlin_attack");
+                SetEventFinished(PageDescription("DAMAGE_RESULT"));
+                return;
         }
-
         SetEventFinished(PageDescription("LEAVE"));
     }
 }

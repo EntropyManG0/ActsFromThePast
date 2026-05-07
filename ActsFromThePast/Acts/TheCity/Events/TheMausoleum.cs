@@ -16,7 +16,7 @@ namespace ActsFromThePast.Acts.TheCity.Events;
 
 public sealed class TheMausoleum : CustomEventModel
 {
-    private const int MaxHpGain = 15;
+    private const int MaxHpGain = 10;
     private const string _sacrificeRelicKey = "SacrificeRelic";
     private RelicModel? _sacrificeRelic;
 

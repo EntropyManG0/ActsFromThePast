@@ -16,7 +16,7 @@ public sealed class StasisPower : CustomPowerModel
     private CardModel? _stolenCard;
     public override PowerType Type => PowerType.Buff;
     public override PowerStackType StackType => PowerStackType.Single;
-    public override bool IsInstanced => true;
+    public override PowerInstanceType InstanceType => PowerInstanceType.Instanced;
 
     private CardModel? StolenCard
     {

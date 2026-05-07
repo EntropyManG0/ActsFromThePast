@@ -4,6 +4,7 @@ using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Entities.Relics;
 using MegaCrit.Sts2.Core.Models.RelicPools;
 using MegaCrit.Sts2.Core.Models.Relics;
+using MegaCrit.Sts2.Core.Rooms;
 using MegaCrit.Sts2.Core.Saves.Runs;
 
 namespace ActsFromThePast.Relics;
@@ -11,41 +12,43 @@ namespace ActsFromThePast.Relics;
 [Pool(typeof(EventRelicPool))]
 public sealed class NlothsHungryFace : CustomRelicModel
 {
+    private int _treasureRoomsEntered;
     
-    // TODO investigate why this doesn't remove gold from chests
-    
-    private bool _isUsed;
-
     public override RelicRarity Rarity => RelicRarity.Event;
-
-    public override bool IsUsedUp => _isUsed;
-
+    public override bool IsUsedUp => _treasureRoomsEntered >= 1;
+    
     [SavedProperty]
-    public bool IsUsed
+    public int TreasureRoomsEntered
     {
-        get => _isUsed;
+        get => _treasureRoomsEntered;
         set
         {
             AssertMutable();
-            _isUsed = value;
-            if (_isUsed)
+            _treasureRoomsEntered = value;
+            if (IsUsedUp)
                 Status = RelicStatus.Disabled;
         }
     }
-
+    
+    public override Task AfterRoomEntered(AbstractRoom room)
+    {
+        if (room is TreasureRoom && _treasureRoomsEntered == 0)
+        {
+            ++TreasureRoomsEntered;
+            Flash();
+        }
+        return Task.CompletedTask;
+    }
+    
     public override bool ShouldGenerateTreasure(Player player)
     {
-        if (player != Owner || _isUsed)
+        if (player != Owner || TreasureRoomsEntered > 1)
             return true;
-
-        // If Silver Crucible is also suppressing this chest, let it take priority
-        // so we don't waste our one-time use on a chest that was already empty
+        
         var silverCrucible = Owner.Relics.OfType<SilverCrucible>().FirstOrDefault();
         if (silverCrucible != null && !silverCrucible.ShouldGenerateTreasure(player))
             return true;
-
-        IsUsed = true;
-        Flash();
+        
         return false;
     }
 }

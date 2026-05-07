@@ -1,4 +1,6 @@
-﻿using ActsFromThePast.Acts.TheBeyond.Enemies;
+﻿using System.Reflection;
+using ActsFromThePast.Acts.TheBeyond.Enemies;
+using ActsFromThePast.Acts.TheCity;
 using Godot;
 using HarmonyLib;
 using MegaCrit.Sts2.Core.Commands;
@@ -8,6 +10,7 @@ using MegaCrit.Sts2.Core.Models.Powers;
 using MegaCrit.Sts2.Core.Nodes.Combat;
 using MegaCrit.Sts2.Core.Nodes.Rooms;
 using MegaCrit.Sts2.Core.Nodes.Screens.DailyRun;
+using MegaCrit.Sts2.Core.Runs;
 
 namespace ActsFromThePast.Patches.Creatures;
 
@@ -247,6 +250,30 @@ public class VisualsPatches
                     louseGreen.IsOpen = false;
                 }
             }
+        }
+    }
+    
+    // so enemies can't be completely obscured by background elements
+    [HarmonyPatch(typeof(NCreature), nameof(NCreature._Ready))]
+    public static class CreatureVisualsLayerPatch
+    {
+        private static readonly PropertyInfo StateProperty =
+            typeof(RunManager).GetProperty("State", BindingFlags.NonPublic | BindingFlags.Instance);
+
+        private static bool IsCityAct()
+        {
+            var runState = StateProperty?.GetValue(RunManager.Instance) as RunState;
+            return runState?.Act is TheCityAct;
+        }
+
+        public static void Postfix(NCreature __instance)
+        {
+            if (!IsCityAct()) return;
+
+            var visuals = __instance.GetChildren().OfType<NCreatureVisuals>().FirstOrDefault();
+
+            if (visuals != null)
+                visuals.ZIndex = -5;
         }
     }
 }

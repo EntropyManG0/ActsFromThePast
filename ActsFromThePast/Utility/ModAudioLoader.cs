@@ -20,9 +20,9 @@ public static class ModAudio
     private static AudioStreamPlayer? _ambiencePlayer;
     private static string? _currentAmbiencePath;
     private static Tween? _ambienceFadeTween;
-    private const float MusicVolumeOffset = -6f;
+    private const float MusicVolumeOffset = -3f;
     private const float AmbienceVolumeOffset = -6f;
-    private const float SfxVolumeOffset = -3f;
+    private const float SfxVolumeOffset = 0f;
     
     private static readonly string[] BossStingers =
     {
@@ -36,24 +36,23 @@ public static class ModAudio
     {
         var stream = GetOrLoadStream(folder, soundName);
         if (stream == null) return;
+
         var player = new AudioStreamPlayer();
         player.Stream = stream;
         player.VolumeDb = volume + SfxVolumeOffset;
         player.Bus = "SFX";
 
         if (pitchVariation > 0f)
-        {
             player.PitchScale = basePitch + (float)Rng.Chaotic.NextDouble() * 2f * pitchVariation - pitchVariation;
-        }
         else
-        {
             player.PitchScale = basePitch;
-        }
 
-        var combatRoom = NCombatRoom.Instance;
-        if (combatRoom != null)
+        var parent = NRun.Instance as Node
+                     ?? (Engine.GetMainLoop() as SceneTree)?.Root;
+
+        if (parent != null)
         {
-            combatRoom.AddChild(player);
+            parent.AddChild(player);
             player.Play();
             player.Finished += () => player.QueueFree();
         }

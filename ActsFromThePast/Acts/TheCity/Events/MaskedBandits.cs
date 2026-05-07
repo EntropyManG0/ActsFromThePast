@@ -3,12 +3,14 @@ using Godot;
 using HarmonyLib;
 using MegaCrit.Sts2.addons.mega_text;
 using MegaCrit.Sts2.Core.Commands;
+using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Gold;
 using MegaCrit.Sts2.Core.Events;
 using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Logging;
 using MegaCrit.Sts2.Core.Models;
+using MegaCrit.Sts2.Core.Models.Cards;
 using MegaCrit.Sts2.Core.Models.Relics;
 using MegaCrit.Sts2.Core.Nodes.Events;
 using MegaCrit.Sts2.Core.Nodes.Rooms;
@@ -23,7 +25,7 @@ public sealed class MaskedBandits : CustomEventModel
     public override ActModel[] Acts => new[] { ModelDb.Act<TheCityAct>() };
 
     public static bool WaitingForMapEasterEgg;
-
+    public static bool WaitingForBrandishEasterEgg;
     internal static bool CombatActive { get; private set; }
 
     public override bool IsShared => true;
@@ -35,10 +37,22 @@ public sealed class MaskedBandits : CustomEventModel
 
     public override bool IsAllowed(IRunState runState) =>
         runState.TotalFloor >= 23 &&
-        !runState.Players.Any(p => p.Relics.Any(r => r is RedMask));
+        (!runState.Players.Any(p => p.Relics.Any(r => r is RedMask))
+         || ActsFromThePastConfig.RebalancedMode);
 
     protected override IReadOnlyList<EventOption> GenerateInitialOptions()
     {
+        if (ActsFromThePastConfig.RebalancedMode
+            && Owner.RunState.Players.Count == 1
+            && Owner.Relics.Any(r => r is RedMask))
+        {
+            return new[]
+            {
+                Option(BrandishMask, "INITIAL_REBALANCED",
+                    HoverTipFactory.FromCardWithCardHoverTips<HandOfGreed>().ToArray()),
+                Option(Fight)
+            };
+        }
         return new[]
         {
             Option(Pay),
@@ -49,6 +63,7 @@ public sealed class MaskedBandits : CustomEventModel
     public override void OnRoomEnter()
     {
         WaitingForMapEasterEgg = false;
+        WaitingForBrandishEasterEgg = false;
     }
 
     private async Task Pay()
@@ -93,6 +108,38 @@ public sealed class MaskedBandits : CustomEventModel
             new RelicReward(redMaskRelic, Owner)
         };
         EnterCombatWithoutExitingEvent<RedMaskBanditsEvent>(rewards, false);
+        return Task.CompletedTask;
+    }
+    
+    private async Task BrandishMask()
+    {
+        var card = Owner.RunState.CreateCard(ModelDb.Card<HandOfGreed>(), Owner);
+        var result = await CardPileCmd.Add(card, PileType.Deck);
+        CardCmd.PreviewCardPileAdd(new[] { result }, 2f);
+        await Cmd.Wait(0.75f);
+        SetEventState(PageDescription("BRANDISH_1"), new[]
+        {
+            new EventOption(this, Brandish2,
+                $"{Id.Entry}.pages.BRANDISH_1.options.CONTINUE",
+                Array.Empty<IHoverTip>())
+        });
+    }
+
+    private Task Brandish2()
+    {
+        SetEventState(PageDescription("BRANDISH_2"), new[]
+        {
+            new EventOption(this, Brandish3,
+                $"{Id.Entry}.pages.BRANDISH_2.options.CONTINUE",
+                Array.Empty<IHoverTip>())
+        });
+        return Task.CompletedTask;
+    }
+
+    private Task Brandish3()
+    {
+        WaitingForBrandishEasterEgg = true;
+        SetEventFinished(PageDescription("BRANDISH_3"));
         return Task.CompletedTask;
     }
 

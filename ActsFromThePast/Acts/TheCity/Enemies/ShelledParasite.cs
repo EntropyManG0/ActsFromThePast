@@ -205,8 +205,9 @@ public sealed class ShelledParasite : CustomMonsterModel
             .Execute(null);
 
         var totalUnblocked = attack.Results
+            .SelectMany(r => r)
             .Where(r => r != null)
-            .Sum(r => r.UnblockedDamage);
+            .Sum(r => (int)r.UnblockedDamage);
 
         if (totalUnblocked > 0)
         {

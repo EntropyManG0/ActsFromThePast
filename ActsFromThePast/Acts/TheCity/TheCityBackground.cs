@@ -465,12 +465,12 @@ public partial class TheCityBackground : NCombatBackground
     
         if (parent is NCombatRoom combatRoom)
         {
-            var insertPoint = combatRoom.GetNodeOrNull<Control>("CombatVfxContainer");
-            if (insertPoint != null)
+            var sceneContainer = combatRoom.GetNodeOrNull<Control>("%CombatSceneContainer");
+            if (sceneContainer != null)
             {
-                ReparentToForeground(_fg, combatRoom, insertPoint);
-                ReparentToForeground(_fgGlow, combatRoom, insertPoint);
-                ReparentToForeground(_fg2, combatRoom, insertPoint);
+                ReparentToContainer(_fg, sceneContainer, 8);
+                ReparentToContainer(_fgGlow, sceneContainer, 8);
+                ReparentToContainer(_fg2, sceneContainer, 8);
             }
 
             var allyContainer = combatRoom.GetNodeOrNull<Control>("%AllyContainer");
@@ -484,14 +484,13 @@ public partial class TheCityBackground : NCombatBackground
         }
     }
     
-    private void ReparentToForeground(TextureRect layer, NCombatRoom combatRoom, Node insertBefore)
+    private void ReparentToContainer(TextureRect layer, Control container, int zIndex)
     {
         var globalPos = layer.GlobalPosition;
         layer.GetParent().RemoveChild(layer);
-        combatRoom.AddChild(layer);
-        combatRoom.MoveChild(layer, insertBefore.GetIndex());
+        container.AddChild(layer);
         layer.GlobalPosition = globalPos;
-        layer.ZIndex = 0;
+        layer.ZIndex = zIndex;
     }
     
     public void SetBossMode(bool isCollector)

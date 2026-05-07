@@ -103,7 +103,7 @@ public sealed class Sentry : CustomMonsterModel
         await CreatureCmd.TriggerAnim(Creature, "Attack", 0.0f);
     
         BorderFlashEffect.PlaySky();
-        ModAudio.Play("general", "magic_beam_short", -6f);
+        ModAudio.Play("general", "magic_beam_short");
     
         var playerCreature = targets.FirstOrDefault(c => c.Player != null);
         var playerPos = playerCreature != null 
