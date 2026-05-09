@@ -1,4 +1,4 @@
-<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/ea450b96-d140-4abe-ab9d-f674c0d7a4b2" /># **IMPORTANT!!**
+# **IMPORTANT!!**
 
 - Acts From The Past isn't yet finished! It still has things like placeholder audio & visual effects, missing logic in places, and more.
 - You must be on the beta branch of Slay the Spire 2 if you wish to play with Acts from the Past (as of release 0.3.0). Additionally, [BaseLib](https://github.com/Alchyr/BaseLib-StS2/releases/latest) is now a required dependency for this mod.
