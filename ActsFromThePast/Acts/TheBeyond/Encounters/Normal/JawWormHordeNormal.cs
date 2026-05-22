@@ -12,6 +12,8 @@ public sealed class JawWormHordeNormal : CustomEncounterModel
     }
     
     public override bool IsValidForAct(ActModel act) => act is TheBeyondAct;
+    public override bool HasScene => true;
+    public override IReadOnlyList<string> Slots => new[] { "first", "second", "third" };
 
     public override IEnumerable<MonsterModel> AllPossibleMonsters
     {
@@ -23,16 +25,16 @@ public sealed class JawWormHordeNormal : CustomEncounterModel
         var worm0 = (JawWorm)ModelDb.Monster<JawWorm>().ToMutable();
         var worm1 = (JawWorm)ModelDb.Monster<JawWorm>().ToMutable();
         var worm2 = (JawWorm)ModelDb.Monster<JawWorm>().ToMutable();
-
+        
         worm0.HardMode = true;
         worm1.HardMode = true;
         worm2.HardMode = true;
-
+        
         return new List<(MonsterModel, string?)>
         {
-            (worm0, null),
-            (worm1, null),
-            (worm2, null)
+            (worm0, "first"),
+            (worm1, "second"),
+            (worm2, "third")
         };
     }
 }

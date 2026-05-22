@@ -30,6 +30,7 @@ public sealed class PlatedArmorPower : CustomPowerModel
     public override Task BeforeSideTurnStart(
         PlayerChoiceContext choiceContext,
         CombatSide side,
+        IReadOnlyList<Creature> participants,
         ICombatState combatState)
     {
         if (Owner.Side != CombatSide.Enemy || side != CombatSide.Player || combatState.RoundNumber != 1)
@@ -37,7 +38,7 @@ public sealed class PlatedArmorPower : CustomPowerModel
         return CreatureCmd.GainBlock(Owner, Amount, ValueProp.Unpowered, null);
     }
 
-    public override async Task BeforeTurnEndEarly(PlayerChoiceContext choiceContext, CombatSide side)
+    public override async Task BeforeSideTurnEndEarly(PlayerChoiceContext choiceContext, CombatSide side, IEnumerable<Creature> participants)
     {
         if (side != Owner.Side)
             return;

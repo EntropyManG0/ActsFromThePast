@@ -32,11 +32,8 @@ public sealed class NlothsHungryFace : CustomRelicModel
     
     public override Task AfterRoomEntered(AbstractRoom room)
     {
-        if (room is TreasureRoom && _treasureRoomsEntered == 0)
-        {
+        if (room is TreasureRoom)
             ++TreasureRoomsEntered;
-            Flash();
-        }
         return Task.CompletedTask;
     }
     

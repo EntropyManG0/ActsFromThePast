@@ -10,6 +10,7 @@ using MegaCrit.Sts2.Core.Models.Powers;
 using MegaCrit.Sts2.Core.Nodes.Combat;
 using MegaCrit.Sts2.Core.Nodes.Rooms;
 using MegaCrit.Sts2.Core.Nodes.Screens.DailyRun;
+using MegaCrit.Sts2.Core.Nodes.Screens.GameOverScreen;
 using MegaCrit.Sts2.Core.Runs;
 
 namespace ActsFromThePast.Patches.Creatures;
@@ -274,6 +275,16 @@ public class VisualsPatches
 
             if (visuals != null)
                 visuals.ZIndex = -5;
+        }
+    }
+    
+    [HarmonyPatch(typeof(NGameOverScreen), "MoveCreaturesToDifferentLayerAndDisableUi")]
+    public static class ResetCreatureZOnGameOverPatch
+    {
+        public static void Postfix(NGameOverScreen __instance, Control ____creatureContainer)
+        {
+            foreach (var visuals in ____creatureContainer.GetChildren().OfType<NCreatureVisuals>())
+                visuals.ZIndex = 0;
         }
     }
 }

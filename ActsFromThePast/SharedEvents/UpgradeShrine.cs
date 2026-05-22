@@ -20,7 +20,7 @@ public sealed class UpgradeShrine : CustomEventModel, IShrineEvent
 {
     public override ActModel[] Acts => Array.Empty<ActModel>();
     
-    private const int KneelDamage = 8;
+    private const int KneelDamage = 10;
 
     public override bool IsAllowed(IRunState runState)
     {

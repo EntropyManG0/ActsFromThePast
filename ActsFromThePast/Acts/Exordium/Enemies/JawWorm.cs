@@ -3,11 +3,14 @@ using Godot;
 using MegaCrit.Sts2.Core.Animation;
 using MegaCrit.Sts2.Core.Assets;
 using MegaCrit.Sts2.Core.Bindings.MegaSpine;
+using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Ascension;
+using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Helpers;
+using MegaCrit.Sts2.Core.Hooks;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Powers;
 using MegaCrit.Sts2.Core.MonsterMoves.Intents;
@@ -32,6 +35,7 @@ public sealed class JawWorm : CustomMonsterModel
     private int BellowBlock => AscensionHelper.GetValueIfAscension(AscensionLevel.DeadlyEnemies, 9, 6);
     
     public bool HardMode { get; set; } = false;
+    private bool _hardModeBlockApplied;
     
     protected override string VisualsPath => "res://ActsFromThePast/monsters/jaw_worm/jaw_worm.tscn";
     
@@ -47,8 +51,42 @@ public sealed class JawWorm : CustomMonsterModel
         if (HardMode)
         {
             await PowerCmd.Apply<StrengthPower>(new ThrowingPlayerChoiceContext(), Creature, BellowStrength, Creature, null);
-            await CreatureCmd.GainBlock(Creature, BellowBlock, ValueProp.Move, null);
         }
+    }
+    
+    public override async Task BeforeSideTurnStart(PlayerChoiceContext choiceContext, CombatSide side, IReadOnlyList<Creature> participants, ICombatState combatState)
+    {
+        await base.BeforeSideTurnStart(choiceContext, side, participants, combatState);
+    
+        if (HardMode && !_hardModeBlockApplied && side == CombatSide.Player)
+        {
+            _hardModeBlockApplied = true;
+            await GainBlockSilent(Creature, BellowBlock, ValueProp.Move, null);
+        }
+    }
+    
+    private static async Task<decimal> GainBlockSilent(Creature creature, decimal amount, ValueProp props, CardPlay? cardPlay)
+    {
+        if (CombatManager.Instance.IsOverOrEnding)
+            return 0M;
+    
+        var combatState = creature.CombatState;
+        await Hook.BeforeBlockGained(combatState, creature, amount, props, cardPlay?.Card);
+    
+        IEnumerable<AbstractModel> modifiers;
+        var modifiedAmount = Hook.ModifyBlock(combatState, creature, amount, props, cardPlay?.Card, cardPlay, out modifiers);
+        modifiedAmount = Math.Max(modifiedAmount, 0M);
+    
+        await Hook.AfterModifyingBlockAmount(combatState, modifiedAmount, cardPlay?.Card, cardPlay, modifiers);
+    
+        if (modifiedAmount > 0M)
+        {
+            creature.GainBlockInternal(modifiedAmount);
+            CombatManager.Instance.History.BlockGained(combatState, creature, (int)modifiedAmount, props, cardPlay);
+        }
+    
+        await Hook.AfterBlockGained(combatState, creature, modifiedAmount, props, cardPlay?.Card);
+        return modifiedAmount;
     }
 
     private void OnDeath(Creature _)

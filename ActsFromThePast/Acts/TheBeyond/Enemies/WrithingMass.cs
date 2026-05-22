@@ -6,6 +6,7 @@ using MegaCrit.Sts2.Core.Bindings.MegaSpine;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Ascension;
 using MegaCrit.Sts2.Core.Entities.Creatures;
+using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Helpers;
 using MegaCrit.Sts2.Core.Logging;
@@ -240,12 +241,8 @@ public sealed class WrithingMass : CustomMonsterModel
         UsedMegaDebuff = true;
         NGame.Instance?.ScreenShake(ShakeStrength.Medium, ShakeDuration.Short);
         await Cmd.Wait(0.2f);
-        var players = Creature.CombatState?.Players;
-        if (players != null)
-        {
-            foreach (var player in players)
-                await CardPileCmd.AddCurseToDeck<Parasite>(player);
-        }
+        foreach (var target in targets)
+            await CardPileCmd.AddCurseToDeck<Parasite>(target.Player);
     }
 
     public override CreatureAnimator GenerateAnimator(MegaSprite controller)

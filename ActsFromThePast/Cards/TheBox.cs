@@ -1,6 +1,7 @@
 ﻿using BaseLib.Abstracts;
 using BaseLib.Utils;
 using MegaCrit.Sts2.Core.Entities.Cards;
+using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Logging;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.CardPools;
@@ -29,7 +30,7 @@ public sealed class TheBox : CustomCardModel
 
 public static class TheBoxTracker
 {
-    public static bool NextPurchaseFree { get; set; }
+    public static Player? FreeNextPurchasePlayer { get; set; }
     public static bool SkipNextCompletion { get; set; }
     public static bool PlayerHasBox { get; set; }
     public static bool ShowRemovalDialogue { get; set; }

@@ -15,6 +15,8 @@ public sealed class SphereAndTwoShapesNormal : CustomEncounterModel
     public override bool IsValidForAct(ActModel act) => act is TheBeyondAct;
     public override IEnumerable<EncounterTag> Tags => [CustomEncounterTags.Shapes];
     public override bool IsWeak => false;
+    public override bool HasScene => true;
+    public override IReadOnlyList<string> Slots => new[] { "first", "second", "sphere" };
 
     public override IEnumerable<MonsterModel> AllPossibleMonsters
     {
@@ -31,9 +33,9 @@ public sealed class SphereAndTwoShapesNormal : CustomEncounterModel
     {
         return new List<(MonsterModel, string?)>
         {
-            (RandomShape(), null),
-            (RandomShape(), null),
-            (ModelDb.Monster<SphericGuardian>().ToMutable(), null)
+            (RandomShape(), "first"),
+            (RandomShape(), "second"),
+            (ModelDb.Monster<SphericGuardian>().ToMutable(), "sphere")
         };
     }
 

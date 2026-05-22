@@ -141,19 +141,13 @@ public sealed class BookOfStabbing : CustomMonsterModel
     private async Task Stab(IReadOnlyList<Creature> targets)
     {
         await DamageCmd.Attack(StabDamage)
+            .WithHitCount(StabCount)
             .FromMonster(this)
             .WithAttackerAnim("Stab", 0.5f)
+            .OnlyPlayAnimOnce()
+            .BeforeDamage(async () => PlayStabSfx())
             .WithHitVfxNode(target => CreateRandomStabVfx(target))
             .Execute(null);
-
-        for (int i = 1; i < StabCount; i++)
-        {
-            PlayStabSfx();
-            await DamageCmd.Attack(StabDamage)
-                .FromMonster(this)
-                .WithHitVfxNode(target => CreateRandomStabVfx(target))
-                .Execute(null);
-        }
     }
     
     

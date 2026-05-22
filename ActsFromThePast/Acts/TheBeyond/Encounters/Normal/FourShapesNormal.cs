@@ -14,6 +14,8 @@ public sealed class FourShapesNormal : CustomEncounterModel
     
     public override bool IsValidForAct(ActModel act) => act is TheBeyondAct;
     public override IEnumerable<EncounterTag> Tags => [CustomEncounterTags.Shapes];
+    public override bool HasScene => true;
+    public override IReadOnlyList<string> Slots => new[] { "first", "second", "third", "fourth" };
     public override IEnumerable<MonsterModel> AllPossibleMonsters
     {
         get
@@ -38,10 +40,10 @@ public sealed class FourShapesNormal : CustomEncounterModel
 
         var result = new List<(MonsterModel, string?)>();
 
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < Slots.Count; i++)
         {
             var index = Rng.NextInt(pool.Count);
-            result.Add((pool[index](), null));
+            result.Add((pool[index](), Slots[i]));
             pool.RemoveAt(index);
         }
 

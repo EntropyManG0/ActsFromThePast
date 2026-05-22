@@ -59,7 +59,7 @@ public sealed class MalleablePower : CustomPowerModel
         await PowerCmd.ModifyAmount(choiceContext, this, 1, null, null);
     }
 
-    public override async Task AfterTurnEnd(PlayerChoiceContext choiceContext, CombatSide side)
+    public override async Task AfterSideTurnEnd(PlayerChoiceContext choiceContext, CombatSide side, IEnumerable<Creature> participants)
     {
         if (side != Owner.Side)
             return;

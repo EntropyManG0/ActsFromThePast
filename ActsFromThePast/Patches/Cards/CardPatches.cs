@@ -8,6 +8,7 @@ using MegaCrit.Sts2.Core.Context;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Merchant;
+using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Helpers;
 using MegaCrit.Sts2.Core.Localization;
@@ -106,9 +107,9 @@ public class ClassicSlimedOnPlayPatch
 [HarmonyPatch(typeof(MerchantEntry), nameof(MerchantEntry.Cost), MethodType.Getter)]
 public static class TheBoxFreePurchasePatch
 {
-    public static void Postfix(ref int __result)
+    public static void Postfix(ref int __result, Player ____player)
     {
-        if (TheBoxTracker.NextPurchaseFree)
+        if (TheBoxTracker.FreeNextPurchasePlayer == ____player)
             __result = 0;
     }
 }
@@ -116,9 +117,9 @@ public static class TheBoxFreePurchasePatch
 [HarmonyPatch(typeof(MerchantEntry), nameof(MerchantEntry.OnTryPurchaseWrapper))]
 public static class TheBoxIgnoreCostPatch
 {
-    public static void Prefix(ref bool ignoreCost)
+    public static void Prefix(ref bool ignoreCost, Player ____player)
     {
-        if (TheBoxTracker.NextPurchaseFree)
+        if (TheBoxTracker.FreeNextPurchasePlayer == ____player)
             ignoreCost = true;
     }
 }
@@ -130,12 +131,10 @@ public static class TheBoxRemovalPatch
     {
         if (card is not TheBox)
             return;
-
         var currentRoom = card.Owner?.RunState?.CurrentRoom;
         if (currentRoom?.RoomType != RoomType.Shop)
             return;
-
-        TheBoxTracker.NextPurchaseFree = true;
+        TheBoxTracker.FreeNextPurchasePlayer = card.Owner;
         TheBoxTracker.SkipNextCompletion = true;
         TheBoxTracker.ShowRemovalDialogue = true;
         TheBoxTracker.PlayerHasBox = false;
@@ -145,19 +144,17 @@ public static class TheBoxRemovalPatch
 [HarmonyPatch(typeof(MerchantEntry), nameof(MerchantEntry.InvokePurchaseCompleted))]
 public static class TheBoxResetAfterPurchasePatch
 {
-    public static void Prefix(MerchantEntry __instance)
+    public static void Prefix(MerchantEntry __instance, Player ____player)
     {
         if (__instance is MerchantCardRemovalEntry)
             TheBoxTracker.CardRemovalUsed = true;
-
         if (TheBoxTracker.SkipNextCompletion)
         {
             TheBoxTracker.SkipNextCompletion = false;
             return;
         }
-
-        if (TheBoxTracker.NextPurchaseFree)
-            TheBoxTracker.NextPurchaseFree = false;
+        if (TheBoxTracker.FreeNextPurchasePlayer == ____player)
+            TheBoxTracker.FreeNextPurchasePlayer = null;
     }
 }
 
@@ -166,7 +163,7 @@ public static class TheBoxResetOnShopEnterPatch
 {
     public static void Prefix(IRunState runState)
     {
-        TheBoxTracker.NextPurchaseFree = false;
+        TheBoxTracker.FreeNextPurchasePlayer = null;
         TheBoxTracker.SkipNextCompletion = false;
         TheBoxTracker.ShowRemovalDialogue = false;
         TheBoxTracker.CardRemovalUsed = false;
@@ -185,12 +182,14 @@ public static class TheBoxGreenPricePatch
             .Select(t => AccessTools.Method(t, "UpdateVisual"))
             .Where(m => m != null);
     }
-
-    public static void Postfix(MegaLabel ____costLabel)
+    public static void Postfix(object __instance, MegaLabel ____costLabel)
     {
-        if (!TheBoxTracker.NextPurchaseFree || ____costLabel == null)
+        if (TheBoxTracker.FreeNextPurchasePlayer == null || ____costLabel == null)
             return;
-
+        var slot = __instance as NMerchantSlot;
+        var player = Traverse.Create(slot?.Entry).Field("_player").GetValue<Player>();
+        if (player != TheBoxTracker.FreeNextPurchasePlayer)
+            return;
         ____costLabel.Modulate = StsColors.green;
     }
 }

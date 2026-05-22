@@ -15,6 +15,8 @@ public sealed class ThreeByrdsWeak : CustomEncounterModel
     public override bool IsValidForAct(ActModel act) => act is TheCityAct;
     public override IEnumerable<EncounterTag> Tags => Array.Empty<EncounterTag>();
     public override bool IsWeak => true;
+    public override bool HasScene => true;
+    public override IReadOnlyList<string> Slots => new[] { "first", "second", "third" };
 
     public override IEnumerable<MonsterModel> AllPossibleMonsters => new MonsterModel[]
     {
@@ -25,9 +27,9 @@ public sealed class ThreeByrdsWeak : CustomEncounterModel
     {
         return new List<(MonsterModel, string?)>
         {
-            (ModelDb.Monster<Byrd>().ToMutable(), null),
-            (ModelDb.Monster<Byrd>().ToMutable(), null),
-            (ModelDb.Monster<Byrd>().ToMutable(), null)
+            (ModelDb.Monster<Byrd>().ToMutable(), "first"),
+            (ModelDb.Monster<Byrd>().ToMutable(), "second"),
+            (ModelDb.Monster<Byrd>().ToMutable(), "third")
         };
     }
 }

@@ -32,7 +32,7 @@ public sealed class Duplicator : CustomEventModel, IShrineEvent
             return true;
 
         return runState.Players.All(p =>
-            PileType.Deck.GetPile(p).Cards.Any(c => c.IsUpgraded));
+            PileType.Deck.GetPile(p).Cards.Count(c => c.IsUpgraded) >= 2);
     }
 
     protected override IReadOnlyList<EventOption> GenerateInitialOptions()

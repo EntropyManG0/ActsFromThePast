@@ -16,6 +16,8 @@ public sealed class LotsOfSlimesNormal : CustomEncounterModel
     public override bool IsValidForAct(ActModel act) => act is ExordiumAct;
     public override IEnumerable<EncounterTag> Tags => [EncounterTag.Slimes];
     public override bool IsWeak => false;
+    public override bool HasScene => true;
+    public override IReadOnlyList<string> Slots => new[] { "first", "second", "third", "fourth", "fifth" };
     
     private static MonsterModel[] SmallSlimes => new MonsterModel[]
     {
@@ -27,7 +29,6 @@ public sealed class LotsOfSlimesNormal : CustomEncounterModel
     
     protected override IReadOnlyList<(MonsterModel, string?)> GenerateMonsters()
     {
-        // Pool: 3 Spike, 2 Acid - pick without replacement
         var pool = new List<Func<MonsterModel>>
         {
             () => ModelDb.Monster<SpikeSlimeSmall>().ToMutable(),
@@ -36,15 +37,15 @@ public sealed class LotsOfSlimesNormal : CustomEncounterModel
             () => ModelDb.Monster<AcidSlimeSmall>().ToMutable(),
             () => ModelDb.Monster<AcidSlimeSmall>().ToMutable()
         };
-        
+    
         var result = new List<(MonsterModel, string?)>();
-        while (pool.Count > 0)
+        for (int i = 0; i < Slots.Count; i++)
         {
             var index = Rng.NextInt(pool.Count);
-            result.Add((pool[index](), null));
+            result.Add((pool[index](), Slots[i]));
             pool.RemoveAt(index);
         }
-        
+    
         return result;
     }
 }

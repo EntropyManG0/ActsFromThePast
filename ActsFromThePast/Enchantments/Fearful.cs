@@ -31,21 +31,24 @@ public sealed class Fearful : CustomEnchantmentModel
         }
     }
 
-    public override decimal EnchantBlockMultiplicative(decimal originalBlock, ValueProp props)
+    public override decimal EnchantBlockMultiplicative(decimal originalBlock)
     {
-        return !props.IsPoweredCardOrMonsterMoveBlock() ? 1M : 3M;
+        return 3M;
     }
 
     public override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay? cardPlay)
     {
         if (Status != EnchantmentStatus.Normal)
             return;
-
-        await PowerCmd.Apply<VulnerablePower>(
-            new ThrowingPlayerChoiceContext(),
+        
+        var power = await PowerCmd.Apply<VulnerablePower>(
+            choiceContext,
             Card.Owner.Creature,
             (decimal)VulnerableAmount,
             Card.Owner.Creature,
             Card);
+        
+        if (power != null)
+            power.SkipNextDurationTick = false;
     }
 }

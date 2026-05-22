@@ -13,8 +13,10 @@ public sealed class ThreeCultistsNormal : CustomEncounterModel
     }
 
     public override bool IsValidForAct(ActModel act) => act is TheCityAct;
-    // TODO make scene for this
 
+    public override bool HasScene => true;
+    public override IReadOnlyList<string> Slots => new[] { "first", "second", "third" };
+    
     public override IEnumerable<MonsterModel> AllPossibleMonsters
     {
         get
@@ -27,9 +29,9 @@ public sealed class ThreeCultistsNormal : CustomEncounterModel
     {
         return new List<(MonsterModel, string?)>
         {
-            (ModelDb.Monster<Cultist>().ToMutable(), null),
-            (ModelDb.Monster<Cultist>().ToMutable(), null),
-            (ModelDb.Monster<Cultist>().ToMutable(), null)
+            (ModelDb.Monster<Cultist>().ToMutable(), "first"),
+            (ModelDb.Monster<Cultist>().ToMutable(), "second"),
+            (ModelDb.Monster<Cultist>().ToMutable(), "third")
         };
     }
 }

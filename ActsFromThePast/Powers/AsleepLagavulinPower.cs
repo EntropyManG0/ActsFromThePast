@@ -45,6 +45,7 @@ public sealed class AsleepLagavulinPower : CustomPowerModel
     public override Task BeforeSideTurnStart(
         PlayerChoiceContext choiceContext,
         CombatSide side,
+        IReadOnlyList<Creature> participants,
         ICombatState combatState)
     {
         if (side != CombatSide.Player || combatState.RoundNumber != 1)
@@ -57,9 +58,10 @@ public sealed class AsleepLagavulinPower : CustomPowerModel
         return CreatureCmd.GainBlock(Owner, metalPower.Amount, ValueProp.Unpowered, null);
     }
 
-    public override async Task BeforeTurnEndVeryEarly(
+    public override async Task BeforeSideTurnEndVeryEarly(
         PlayerChoiceContext choiceContext,
-        CombatSide side)
+        CombatSide side,
+        IEnumerable<Creature> participants)
     {
         if (side != Owner.Side || Amount > 1 || !Owner.HasPower<MetallicizePower>())
             return;
@@ -67,7 +69,10 @@ public sealed class AsleepLagavulinPower : CustomPowerModel
         await PowerCmd.Remove(Owner.GetPower<MetallicizePower>());
     }
 
-    public override async Task AfterTurnEnd(PlayerChoiceContext choiceContext, CombatSide side)
+    public override async Task AfterSideTurnEnd(
+        PlayerChoiceContext choiceContext,
+        CombatSide side,
+        IEnumerable<Creature> participants)
     {
         if (side != Owner.Side)
             return;

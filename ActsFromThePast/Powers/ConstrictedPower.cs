@@ -16,7 +16,7 @@ public sealed class ConstrictedPower : CustomPowerModel
 
     public override PowerStackType StackType => PowerStackType.Counter;
 
-    public override async Task AfterTurnEnd(PlayerChoiceContext choiceContext, CombatSide side)
+    public override async Task AfterSideTurnEnd(PlayerChoiceContext choiceContext, CombatSide side, IEnumerable<Creature> participants)
     {
         ConstrictedPower constrictedPower = this;
         if (side != constrictedPower.Owner.Side)
