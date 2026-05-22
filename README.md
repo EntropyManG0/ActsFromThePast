@@ -5,7 +5,7 @@
 - If you play with Acts From The Past and then play on the same modded profile with the mod disabled afterwards, trying to enter the Run History screen will crash the game! Either make a new modded profile just for testing this mod OR back up your modded profile. If you make a new profile, I'd recommend running `unlock all` in the console.
 - If you want to ONLY play with Exordium/The City/The Beyond, please also install [Act Toggler](github.com/Cany0udance/ActToggler/releases/latest).
 - I have to imagine this mod breaks if played on widescreen or resolutions other than 16:9.
-- Acts From The Past only supports English and Russian for now. If anyone is willing to translate, let me know and I can send the .json files!
+- Acts From The Past supports English, Russian, and Korean. If you wish to fix or contribute a translation, [please reference the localization files](https://github.com/Cany0udance/ActsFromThePast/tree/main/ActsFromThePast/Localization).
 - Acts From The Past is NOT multiplayer stable at the moment!! If you play this with multiplayer, don't be surprised if you run into something like a softlock. ALL players in a lobby must have the same configs in order to play multiplayer.
 
 # Acts From The Past
@@ -14,7 +14,7 @@ Acts From The Past is a work-in-progress port of the Acts from Slay the Spire 1,
 
 <img width="1369" height="770" alt="image" src="https://github.com/user-attachments/assets/ad195a97-9743-435c-8107-a6fa4c242568" />
 
-The mod *only* includes the encounters and act-specific events from Slay the Spire 1's acts, meaning Shrine events such as Wheel of Change or Lady in Blue have *not* been ported (though I may do that later if there is a demand for it)
+This mod includes ALL events from the first game besides A Note For Yourself.
 
 <img width="1369" height="770" alt="image" src="https://github.com/user-attachments/assets/76f0bb64-0f6d-41c6-8833-62322f85d733" />
 
