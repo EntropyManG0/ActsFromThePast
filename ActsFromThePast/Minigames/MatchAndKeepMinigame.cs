@@ -68,10 +68,23 @@ public class MatchAndKeepMinigame
             ? (CardModel)ModelDb.Card<Guilty>()
             : rng.NextItem(cursePool);
 
-        Canonicals[5] = rng.NextItem(characterPool.Where(c =>
+        var basics = characterPool.Where(c =>
             c.Rarity == CardRarity.Basic &&
             !c.Tags.Contains(CardTag.Strike) &&
-            !c.Tags.Contains(CardTag.Defend)));
+            !c.Tags.Contains(CardTag.Defend)).ToList();
+
+        if (basics.Count == 0)
+        {
+            basics = Owner.Character.StartingDeck
+                .Where(c => c.Rarity == CardRarity.Basic &&
+                            !c.Tags.Contains(CardTag.Strike) &&
+                            !c.Tags.Contains(CardTag.Defend))
+                .ToList();
+        }
+
+        Canonicals[5] = basics.Count > 0
+            ? rng.NextItem(basics)
+            : rng.NextItem(characterPool.Where(c => c.Rarity == CardRarity.Common));
 
         // Create 2 instances per canonical
         for (int i = 0; i < 6; i++)

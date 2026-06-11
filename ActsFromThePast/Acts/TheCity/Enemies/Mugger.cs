@@ -4,6 +4,7 @@ using MegaCrit.Sts2.Core.Bindings.MegaSpine;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Ascension;
 using MegaCrit.Sts2.Core.Entities.Creatures;
+using MegaCrit.Sts2.Core.Entities.Gold;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Helpers;
 using MegaCrit.Sts2.Core.Models;
@@ -157,10 +158,7 @@ public sealed class Mugger : CustomMonsterModel
             .WithHitFx("vfx/vfx_attack_slash")
             .Execute(null);
 
-        foreach (var thievery in Creature.GetPowerInstances<ThieveryPower>())
-        {
-            await thievery.Steal();
-        }
+        await StealGold();
         _mugCount++;
     }
 
@@ -174,6 +172,14 @@ public sealed class Mugger : CustomMonsterModel
     {
         TalkCmd.Play(L10NMonsterLookup("ACTSFROMTHEPAST-MUGGER.moves.ESCAPE.banter"), Creature, VfxColor.Swamp, VfxDuration.Short);
 
+        var entry = Creature.CombatState.RunState.CurrentMapPointHistoryEntry;
+        foreach (var thievery in Creature.GetPowerInstances<ThieveryPower>())
+        {
+            var stolen = thievery.DynamicVars.Gold.IntValue;
+            if (stolen > 0)
+                entry?.GetEntry(thievery.Target.Player.NetId)?.MarkLootStolen(stolen);
+        }
+
         var creatureNode = NCombatRoom.Instance?.GetCreatureNode(Creature);
         if (creatureNode != null)
         {
@@ -181,7 +187,6 @@ public sealed class Mugger : CustomMonsterModel
             NCombatRoom.Instance.CombatVfxContainer.AddChild(effect);
         }
         creatureNode?.ToggleIsInteractable(false);
-
         await EscapeAnimation.Play(Creature);
         await CreatureCmd.Escape(Creature);
     }
@@ -198,11 +203,24 @@ public sealed class Mugger : CustomMonsterModel
             .WithHitFx("vfx/vfx_attack_slash")
             .Execute(null);
 
+        await StealGold();
+        _mugCount++;
+    }
+    
+    private async Task StealGold()
+    {
         foreach (var thievery in Creature.GetPowerInstances<ThieveryPower>())
         {
-            await thievery.Steal();
+            var target = thievery.Target;
+            if (target == null || target.IsDead || target.Player.Gold <= 0)
+                continue;
+
+            var amount = Math.Min(thievery.Amount, target.Player.Gold);
+            await PlayerCmd.LoseGold((decimal)amount, target.Player, GoldLossType.Lost);
+
+            var gold = thievery.DynamicVars.Gold;
+            gold.BaseValue += (decimal)amount;
         }
-        _mugCount++;
     }
 
     private void PlayAttackSfx()

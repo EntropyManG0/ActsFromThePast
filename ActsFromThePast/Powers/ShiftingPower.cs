@@ -15,14 +15,6 @@ public sealed class ShiftingPower : CustomPowerModel
     public override PowerType Type => PowerType.Buff;
     public override PowerStackType StackType => PowerStackType.None;
 
-    private int _pendingStrengthRestore = 0;
-
-    private int PendingStrengthRestore
-    {
-        get => _pendingStrengthRestore;
-        set { AssertMutable(); _pendingStrengthRestore = value; }
-    }
-
     public override async Task AfterDamageReceived(
         PlayerChoiceContext choiceContext,
         Creature target,
@@ -37,18 +29,11 @@ public sealed class ShiftingPower : CustomPowerModel
             return;
 
         Flash();
-        await PowerCmd.Apply<StrengthPower>(new ThrowingPlayerChoiceContext(), Owner, -result.TotalDamage, Owner, null);
-        PendingStrengthRestore += result.TotalDamage;
-    }
-
-    public override async Task AfterSideTurnEnd(PlayerChoiceContext choiceContext, CombatSide side, IEnumerable<Creature> participants)
-    {
-        if (side != Owner.Side)
-            return;
-        if (PendingStrengthRestore <= 0)
-            return;
-
-        await PowerCmd.Apply<StrengthPower>(new ThrowingPlayerChoiceContext(), Owner, PendingStrengthRestore, Owner, null);
-        PendingStrengthRestore = 0;
+        await PowerCmd.Apply<ShiftingStrengthDownPower>(
+            new ThrowingPlayerChoiceContext(),
+            Owner,
+            result.TotalDamage,
+            Owner,
+            null);
     }
 }
