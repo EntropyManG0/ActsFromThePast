@@ -2,7 +2,7 @@
 [list]
 [*]Acts from the Past ainda não está finalizado! O mod ainda tem coisas como efeitos visuais e de áudio provisórios (placeholders), lógica faltando em alguns lugares, e mais.
 [*]Você deve estar no [b]ramo beta (beta branch)[/b] do Slay the Spire 2 se quiser jogar com o Acts from the Past.
-[*]Acts from the Past tem suporte para Inglês, Chinês Simplificado, Russo, Coreano e Português (BR). Se você deseja corrigir ou contribuir com uma tradução, por favor, consulte os [url=[https://github.com/Cany0udance/ActsFromThePast/tree/main/ActsFromThePast/Localization](https://github.com/Cany0udance/ActsFromThePast/tree/main/ActsFromThePast/Localization)]arquivos de localização[/url]. Sinta-se à vontade para fazer um pull request para o repositório no Git ou me enviar os arquivos de outra forma.
+[*]Se você deseja corrigir ou contribuir com uma tradução, por favor, consulte os [url=[https://github.com/Cany0udance/ActsFromThePast/tree/main/ActsFromThePast/Localization](https://github.com/Cany0udance/ActsFromThePast/tree/main/ActsFromThePast/Localization)]arquivos de localização[/url]. Sinta-se à vontade para fazer um pull request para o repositório no Git ou me enviar os arquivos de outra forma.
 [*]Se você quiser jogar APENAS com Exórdio/A Cidade/O Além, por favor, instale também o [url=[https://steamcommunity.com/sharedfiles/filedetails/?id=3737158447](https://steamcommunity.com/sharedfiles/filedetails/?id=3737158447)]Act Toggler[/url].
 [*]Para jogar com o Acts from the Past no multiplayer, TODOS os jogadores devem ter as mesmas configurações (configs).
 [/list]

@@ -4,7 +4,7 @@
 [list]
 [*]Acts from the Past 尚未完成！模组中仍然存在临时音效和视觉效果、部分逻辑缺失等问题。
 [*]游玩 Acts from the Past 需要使用 Slay the Spire 2 的[b]测试分支[/b]。
-[*]Acts from the Past 支持英语、简体中文、俄语和韩语。如果您想修正或贡献翻译，请参考[url=https://github.com/Cany0udance/ActsFromThePast/tree/main/ActsFromThePast/Localization]本地化文件[/url]。欢迎向 GitHub 仓库提交 pull request，或者直接将文件发送给我。
+[*]如果您想修正或贡献翻译，请参考[url=https://github.com/Cany0udance/ActsFromThePast/tree/main/ActsFromThePast/Localization]本地化文件[/url]。欢迎向 GitHub 仓库提交 pull request，或者直接将文件发送给我。
 [*]如果您只想游玩 Exordium/The City/The Beyond，请同时安装 [url=https://steamcommunity.com/sharedfiles/filedetails/?id=3737158447]Act Toggler[/url] 模组。
 [*]在多人游戏中使用 Acts from the Past 时，所有玩家必须使用相同的配置设置。
 [/list]
