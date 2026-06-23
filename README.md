@@ -1,4 +1,4 @@
-# **Please note that this repository will no longer receive updates. Please see the mod on [Steam]([https://github.com/Cany0udance/GooglyEyes/releases/latest](https://steamcommunity.com/sharedfiles/filedetails/?id=3746969593)) for the latest version.**
+# **Please note that this repository will no longer receive releases. Please see the mod on [Steam](https://steamcommunity.com/sharedfiles/filedetails/?id=3746969593) for the latest version.**
 
 # Acts From The Past
 
