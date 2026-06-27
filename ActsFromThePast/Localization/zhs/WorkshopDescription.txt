@@ -59,7 +59,7 @@ Acts from the Past 是一个仍在开发中的模组，旨在移植 Slay the Spi
 [*][b]snumodder[/b] — 韩语翻译
 [*][b]Sashimi_knife[/b] — 日语翻译
 [*][b]floca[/b] — 巴西葡萄牙语翻译
-[*][b]jjkkllike & ImLingCheng[/b] — 简体中文翻译
+[*][b]jjkkllike & ImLingCheng & Entropy ManG0[/b] — 简体中文翻译
 [*][b]flounder[/b] — Blood Bank 遗物美术
 [*][b]Book & Ajama[/b] — 综合支持
 [*][b]Aurora[/b] — 发布后的关键支持
