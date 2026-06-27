@@ -781,7 +781,7 @@
   "ACTSFROMTHEPAST-WINDING_HALLS.pages.CHOICE.description": "当你经过一个你十分确定之前见到过的建筑物时，你开始怀疑是自己疯了，还是这个地方违背常理的地形让你失去了理智。你需要立即做出一些改变。\n\n至少那些声音们是这么说的，他们怎么会骗人呢？",
   "ACTSFROMTHEPAST-WINDING_HALLS.pages.CHOICE.options.MADNESS.description": "将[blue]2[/blue][gold]疯狂[/gold]加入你的[gold]牌组[/gold]。失去[red]{HpLoss}[/red]点生命。",
   "ACTSFROMTHEPAST-WINDING_HALLS.pages.CHOICE.options.MADNESS.title": "拥抱疯狂",
-  "ACTSFROMTHEPAST-WINDING_HALLS.pages.CHOICE.options.RETREAT.description": "失去[red]{MaxHpLoss}[/red]最大生命。",
+  "ACTSFROMTHEPAST-WINDING_HALLS.pages.CHOICE.options.RETREAT.description": "失去[red]{MaxHpLoss}[/red]点最大生命。",
   "ACTSFROMTHEPAST-WINDING_HALLS.pages.CHOICE.options.RETREAT.title": "寻找来路",
   "ACTSFROMTHEPAST-WINDING_HALLS.pages.CHOICE.options.WRITHE.description": "回复[green]{HealAmt}[/green]点生命。获得[red]苦恼[/red]。",
   "ACTSFROMTHEPAST-WINDING_HALLS.pages.CHOICE.options.WRITHE.title": "集中",
